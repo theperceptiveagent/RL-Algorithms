@@ -3,6 +3,9 @@ import numpy as np
 class Gridworld:
 
     def __init__(self, start_pos=(3, 0), goal_pos=(3, 7)):
+        
+        assert start_pos[0] < 7 and goal_pos[0] < 7, "Start and goal x coords must be less than 7"
+
         self.grid = np.zeros((7, 10))
 
         self.start_x, self.start_y = start_pos[0], start_pos[1]
@@ -78,15 +81,24 @@ class Gridworld:
             print('Goal reached!')
 
 
-gridworld = Gridworld()
-# state = gridworld.reset()
-# gridworld.render()
-for i in range(9):
-    state, reward, done = gridworld.step(1)
-for i in range(4):
-    state, reward, done = gridworld.step(3)
-for i in range(2):
-    state, reward, done = gridworld.step(0)
+gridworld = Gridworld(start_pos=(4, 0), goal_pos=(6, 7))
+# <------just making sure everything works fine ------>
+state = gridworld.reset()
+print(f'A new environment.')
 gridworld.render()
+for i in range(3):
+    state, reward, done = gridworld.step(1) # Right
+print('After going right')
+gridworld.render()
+for i in range(4):
+    state, reward, done = gridworld.step(3) # Down
+print('After going down')
+gridworld.render()
+for i in range(2): 
+    state, reward, done = gridworld.step(0) # Left
+print('After taking the steps')
+gridworld.render()
+# <-----Movements seem okay -------->
+
 print(state)
 
