@@ -80,25 +80,25 @@ class Gridworld:
         if self.done:
             print('Goal reached!')
 
+if __name__ == '__main__':
+    gridworld = Gridworld(start_pos=(4, 0), goal_pos=(6, 7))
+    # <------just making sure everything works fine ------>
+    state = gridworld.reset()
+    print(f'A new environment.')
+    gridworld.render()
+    for i in range(3):
+        state, reward, done = gridworld.step(1) # Right
+    print('After going right')
+    gridworld.render()
+    for i in range(4):
+        state, reward, done = gridworld.step(3) # Down
+    print('After going down')
+    gridworld.render()
+    for i in range(2): 
+        state, reward, done = gridworld.step(0) # Left
+    print('After taking the steps')
+    gridworld.render()
+    # <-----Movements seem okay -------->
 
-gridworld = Gridworld(start_pos=(4, 0), goal_pos=(6, 7))
-# <------just making sure everything works fine ------>
-state = gridworld.reset()
-print(f'A new environment.')
-gridworld.render()
-for i in range(3):
-    state, reward, done = gridworld.step(1) # Right
-print('After going right')
-gridworld.render()
-for i in range(4):
-    state, reward, done = gridworld.step(3) # Down
-print('After going down')
-gridworld.render()
-for i in range(2): 
-    state, reward, done = gridworld.step(0) # Left
-print('After taking the steps')
-gridworld.render()
-# <-----Movements seem okay -------->
-
-print(state)
+    print(state)
 
