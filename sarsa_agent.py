@@ -48,19 +48,16 @@ class SarsaAgent:
         return action
 
     def learn(self, state, action, reward, next_state, next_state_action):
-        
-        # Note to self: The next_state and next_state_action will be none if the episode is terminated.
-        
-        # Learning section
-        if next_state == None or next_state_action == None:
-            self.Q[(state, action)] += reward
+        """
+        Rethink the learn portion to account for first time encounters of state and terminal conditions.
+        """
+        q_next = self.get_Q_value(next_state, next_state_action)
+
+        q_current = self.Q.get((state, action), None) # If this is the first time the state action pair is encountered
+        if q_current is None:
+            self.Q[(state, action)] = reward
         else:
-            q_current = self.Q.get((state, action), None) # If this is the first time the state action pair is encountered
-            if q_current == None:
-                self.Q[(state, action)] = reward
-            else:
-                q_next = self.get_Q_value(next_state, next_state_action)
-                self.Q[(state, action)] += self.alpha * (reward + self.gamma * q_next - q_current)
+            self.Q[(state, action)] = q_current + (self.alpha * (reward + self.gamma * q_next - q_current))
 
 
 if __name__ == "__main__":
