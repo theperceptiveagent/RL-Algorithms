@@ -19,6 +19,8 @@ class Gridworld:
                 2: 'up', 
                 3: 'down'
             }
+        self.action_space = list(self.num2action.keys())
+
         self.done = False # A flag to check if goal is reached.
 
     def reset(self):
@@ -39,13 +41,13 @@ class Gridworld:
         self.wind_effect()
 
         if action == 0:
-            self.curr_y -= 1 if self.curr_y != 0 else 0
+            self.curr_y = self.curr_y - 1 if self.curr_y > 0 else self.curr_y
         elif action == 1:
-            self.curr_y += 1 if self.curr_y != 9 else 0
+            self.curr_y = self.curr_y + 1 if self.curr_y < 9 else self.curr_y
         elif action == 2:
-            self.curr_x -= 1 if self.curr_x != 0 else 0
+            self.curr_x = self.curr_x - 1 if self.curr_x > 0 else self.curr_x
         elif action == 3:
-            self.curr_x += 1 if self.curr_x != 6 else 0
+            self.curr_x = self.curr_x + 1 if self.curr_x < 6 else self.curr_x
 
         reward_for_action = self.calculate_reward()
 
@@ -53,10 +55,11 @@ class Gridworld:
     
     def wind_effect(self):
         displacement = self.wind_offsets[self.curr_y]
-        self.curr_x -= displacement if self.curr_x != 0 else 0
+        new_x = self.curr_x - displacement
+        self.curr_x = new_x if new_x >= 0 else 0
 
     def calculate_reward(self):
-        if self.curr_x == self.goal_x and self.curr_y == self.curr_y:
+        if self.curr_x == self.goal_x and self.curr_y == self.goal_y:
             self.done = True
             return 10
         else:

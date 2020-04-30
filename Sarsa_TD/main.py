@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import math
 
 
-num_episodes = 150
+num_episodes = 300
 episode_scores = []
 
 gridworld = Gridworld()
@@ -35,7 +35,7 @@ for i_episode in range(1, num_episodes+1):
         episode_actions.append(action)
         if done:
             break
-        
+
     episode_scores.append(episode_score)
 
     # For best episode data
@@ -46,7 +46,7 @@ for i_episode in range(1, num_episodes+1):
     print(f'\rEpisode: {i_episode}/{num_episodes}, score: {episode_score}, Average(last 100): {sum(episode_scores[:-100])/len(episode_scores)}', end='')
 
 print(f'\nAfter {num_episodes}, average score: {sum(episode_scores)/len(episode_scores)}, Average(last 100): {sum(episode_scores[:-100])/len(episode_scores)}')
-print(f'Best score: {best_score}, Sequence of actions: {best_path_actions}')
+print(f'Best score: {best_score}, Sequence of actions: {[gridworld.num2action[action] for action in best_path_actions]}')
 
 plt.plot(range(len(episode_scores)), episode_scores)
 plt.xlabel('Episodes ->')
