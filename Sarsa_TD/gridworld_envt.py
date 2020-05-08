@@ -2,7 +2,7 @@ import numpy as np
 
 class Gridworld:
 
-    def __init__(self, start_pos=(3, 0), goal_pos=(3, 7)):
+    def __init__(self, start_pos=(3, 0), goal_pos=(3, 7), max_time_steps=3000):
         
         assert start_pos[0] < 7 and goal_pos[0] < 7, "Start and goal x coords must be less than 7"
 
@@ -22,12 +22,13 @@ class Gridworld:
         self.action_space = list(self.num2action.keys())
 
         self.done = False # A flag to check if goal is reached.
+        self.max_time_steps = max_time_steps
+        self.time_step = 0 # Keep track of how many time-steps have elapsed.
 
     def reset(self):
         self.curr_x, self.curr_y = self.start_x, self.start_y
-
         self.done = False
-
+        self.time_step = 0
         return (self.curr_x, self.curr_y)
 
     def step(self, action):
@@ -36,6 +37,8 @@ class Gridworld:
                                                                     "Call env.reset()"
         
         assert action in [0, 1, 2, 3], 'action must be a number from 0-3'
+
+        self.time_step += 1
 
         # Add wind's effect
         self.wind_effect()
@@ -62,6 +65,9 @@ class Gridworld:
         if self.curr_x == self.goal_x and self.curr_y == self.goal_y:
             self.done = True
             return 10
+        elif self.time_step > self.max_time_steps:
+            self.done = True
+            return -1
         else:
             return -1
 

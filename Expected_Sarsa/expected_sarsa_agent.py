@@ -1,6 +1,6 @@
 import random
 
-class QAgent:
+class ExpectedSarsaAgent:
 
     def __init__(self, actions, alpha = 0.4, gamma=0.9):
         """
@@ -35,20 +35,20 @@ class QAgent:
         
         return action
 
-    def learn(self, state, action, reward, next_state):
+    def learn(self, state, action, reward, next_state, epsilon):
         """
-        Q-Learning update
+        Expected Sarsa update
         """
-        q_next = self.get_Q_value(
-            state = next_state,
-            action = self.greedy_action_selection(next_state)
-            )
+
+        next_state_probs = self.action_probs(next_state, epsilon) # Probability for taking each action in next state
+        q_next_state = [self.get_Q_value(next_state, action) for action in self.actions] # Q-values for each action in next state
+        next_state_expectation = sum([a*b for a, b in zip(next_state_probs, q_next_state)])
 
         q_current = self.Q.get((state, action), None) # If this is the first time the state action pair is encountered
         if q_current is None:
             self.Q[(state, action)] = reward
         else:
-            self.Q[(state, action)] = q_current + (self.alpha * (reward + self.gamma * q_next - q_current))
+            self.Q[(state, action)] = q_current + (self.alpha * (reward + self.gamma * next_state_expectation - q_current))
 
     def greedy_action_selection(self, state):
         """
@@ -68,9 +68,18 @@ class QAgent:
             
         return self.actions[action_index]
 
+    def action_probs(self, state, epsilon):
+        """
+        Returns the probability of taking each action in the next state.
+        """
+        next_state_probs = [epsilon/len(self.actions)] * len(self.actions)
+        best_action = self.greedy_action_selection(state)
+        next_state_probs[best_action] += (1.0 - epsilon)
+
+        return next_state_probs
 
 if __name__ == "__main__":
-    agent = QAgent([0, 1, 2, 3])
+    agent = ExpectedSarsaAgent([0, 1, 2, 3])
 
     action = agent.act((2, 3), 0.001)
     agent.learn((2,3), 0, 5, (4, 5))
